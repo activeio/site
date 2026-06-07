@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ---------------------------------------------------------------------------
+   active IO labs — design tokens
+   Clean light page, near-black ink, one green accent. The terminal renders
+   as a dark console card for contrast.
+--------------------------------------------------------------------------- */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: #fcfcfb;
+  --color-foreground: #0c0e0d;
+  --color-ink: #0c0e0d;
+  --color-muted: #6b7280;
+  --color-line: #e7e7e2;
+  --color-accent: #00b86b;
+  --color-accent-soft: #e6f7ef;
+
+  /* terminal palette */
+  --color-term-bg: #0b0f0e;
+  --color-term-bar: #161b1a;
+  --color-term-text: #c9d6d0;
+  --color-term-dim: #5f7068;
+  --color-term-green: #3ddc97;
+  --color-term-cyan: #56c7d6;
+  --color-term-yellow: #e8c468;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --animate-blink: blink 1.05s steps(1) infinite;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
   }
 }
 
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle dotted grid used behind the hero */
+.grid-bg {
+  background-image: radial-gradient(var(--color-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Thin custom scrollbar inside the terminal screen */
+.term-screen::-webkit-scrollbar {
+  width: 8px;
+}
+.term-screen::-webkit-scrollbar-thumb {
+  background: #2a322f;
+  border-radius: 8px;
+}
+.term-screen::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
