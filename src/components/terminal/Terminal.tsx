@@ -250,7 +250,7 @@ export default function Terminal() {
       <div
         ref={screenRef}
         onClick={focusInput}
-        className="term-screen h-[360px] cursor-text overflow-y-auto px-4 py-3 text-term-text sm:h-[420px]"
+        className="term-screen h-[260px] cursor-text overflow-y-auto px-4 py-3 text-term-text sm:h-[300px]"
       >
         {boot !== null && (
           <div className="whitespace-pre-wrap break-words text-term-green">
