@@ -5,9 +5,9 @@
 
 export type Service = {
   id: string;
+  kanji: string;
   title: string;
   blurb: string;
-  tags: string[];
 };
 
 export type Project = {
@@ -24,11 +24,11 @@ export const site = {
   email: "sweswepradeep@gmail.com",
 
   description:
-    "A small software & apps studio. We take ideas from blank screen to shipped — web, mobile, and the messy bits in between.",
+    "A small software studio. Ideas become web & mobile products — quietly, carefully, fast.",
 
   hero: {
-    headline: "We build software & apps.",
-    sub: "active IO labs is a tiny product studio. We turn ideas into fast, well-crafted web and mobile products — from first prototype to production.",
+    headline: "We craft software & apps.",
+    sub: "A tiny product studio. Ideas become web & mobile products — quietly, carefully, fast.",
   },
 
   nav: [
@@ -40,31 +40,27 @@ export const site = {
   services: [
     {
       id: "web",
+      kanji: "網",
       title: "Web apps",
-      blurb:
-        "Fast, modern web apps with Next.js & React and a backend that holds up under real users.",
-      tags: ["Next.js", "React", "APIs"],
+      blurb: "Fast, modern web apps that hold up under real users.",
     },
     {
       id: "mobile",
+      kanji: "携",
       title: "Mobile apps",
-      blurb:
-        "iOS & Android from one codebase. Native feel, smooth animations, quick iteration.",
-      tags: ["React Native", "iOS", "Android"],
+      blurb: "iOS & Android from one codebase, with a native feel.",
     },
     {
       id: "mvp",
-      title: "MVPs & prototypes",
-      blurb:
-        "Validate an idea in weeks, not quarters. We build the smallest thing that proves it works.",
-      tags: ["Discovery", "Prototype", "Launch"],
+      kanji: "芽",
+      title: "MVPs",
+      blurb: "The smallest thing that proves the idea works.",
     },
     {
       id: "ai",
+      kanji: "知",
       title: "AI features",
-      blurb:
-        "Genuinely useful AI — assistants, search, automation — wired into your product without the hype.",
-      tags: ["LLMs", "Search", "Automation"],
+      blurb: "Useful AI, wired in without the hype.",
     },
   ] satisfies Service[],
 
@@ -95,10 +91,9 @@ export const site = {
     },
   ] satisfies Project[],
 
-  // Placeholder social links — swap in real URLs when ready.
   socials: [
     { label: "GitHub", href: "https://github.com/activeio" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/company/81358237/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/pradeep-swe/" },
   ],
 } as const;
 

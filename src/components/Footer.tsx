@@ -1,15 +1,17 @@
 import { site } from "@/lib/site";
+import { Brand } from "@/components/Brand";
 
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-line">
       <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-5 py-10 sm:flex-row sm:items-center">
         <div>
-          <a href="#top" className="font-mono text-sm font-medium">
-            <span className="text-accent">active</span>_io_labs
-          </a>
-          <p className="mt-1 text-xs text-muted">
-            Software &amp; apps building lab · {new Date().getFullYear()}
+          <Brand size="sm" />
+          <p className="mt-2 text-xs text-muted">
+            <span lang="ja" className="font-display">
+              ものづくり
+            </span>{" "}
+            · software studio · {new Date().getFullYear()}
           </p>
         </div>
 
