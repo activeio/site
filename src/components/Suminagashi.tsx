@@ -23,12 +23,29 @@ const MAX_DROPS = 90; // polygons kept alive before the oldest fades out
 const CIRCLE_VERTS = 80; // vertices of a fresh drop
 const MAX_VERTS = 600; // cap after adaptive subdivision
 const MAX_SEG = 7; // px: split polygon edges longer than this
+const GROW_MS = 460; // how long a fresh drop blooms open from a speck to full size
+const GROW_START = 0.6; // px: radius of a drop on its first frame
+const MAX_GROWING = 12; // cap concurrent blooms so a click-storm degrades gracefully
 
 type Pt = { x: number; y: number };
-type Drop = { pts: Pt[]; color: string; alpha: number; fading: boolean };
+type Drop = {
+  pts: Pt[];
+  color: string;
+  alpha: number;
+  fading: boolean;
+  // While a drop blooms open these track its growth; cleared once full size.
+  growing?: boolean;
+  gCx?: number;
+  gCy?: number;
+  gTarget?: number;
+  gAge?: number;
+  gPrevR?: number;
+};
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const pick = <T,>(arr: T[]) => arr[(Math.random() * arr.length) | 0];
+// Ease-out so the ink spreads fast then settles, the way a real drop blooms.
+const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
 export function Suminagashi() {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -58,10 +75,18 @@ export function Suminagashi() {
     }
 
     // A new drop of radius r at (cx, cy) pushes every existing point
-    // from distance d to sqrt(d^2 + r^2).
-    function deformByDrop(cx: number, cy: number, r: number) {
+    // from distance d to sqrt(d^2 + r^2). skipGrowing leaves other
+    // still-blooming drops untouched so concurrent drops grow independently.
+    function deformByDrop(
+      cx: number,
+      cy: number,
+      r: number,
+      skipGrowing = false,
+      exceptDrop: Drop | null = null
+    ) {
       const r2 = r * r;
       for (const d of drops) {
+        if (skipGrowing && d.growing && d !== exceptDrop) continue;
         for (const p of d.pts) {
           const dx = p.x - cx;
           const dy = p.y - cy;
@@ -133,16 +158,78 @@ export function Suminagashi() {
       for (const d of drops) resample(d);
     }
 
-    function addDrop(x: number, y: number, r: number, color: string) {
-      deformByDrop(x, y, r);
-      resampleAll();
-      drops.push({ pts: makeCircle(x, y, r), color, alpha: 1, fading: false });
+    function capDrops() {
       let extra = drops.length - MAX_DROPS;
       for (let i = 0; extra > 0 && i < drops.length; i++) {
-        if (!drops[i].fading) {
+        if (!drops[i].fading && !drops[i].growing) {
           drops[i].fading = true;
           extra--;
         }
+      }
+    }
+
+    // Instant placement: deform the field once and drop a full-size ring.
+    // Used for the seeded composition and the reduced-motion static render.
+    function placeDrop(x: number, y: number, r: number, color: string) {
+      deformByDrop(x, y, r, true); // skip in-flight blooms so they stay independent
+      resampleAll();
+      drops.push({ pts: makeCircle(x, y, r), color, alpha: 1, fading: false });
+      capDrops();
+    }
+
+    // Bloom placement: the drop starts as a speck and opens up over GROW_MS,
+    // pushing the settled ink outward a little each frame. Because marbling
+    // displacements add in quadrature (sqrt(d^2 + r^2)), spreading one r-drop
+    // across many small steps lands on the exact same field an instant drop
+    // would — it just reads as ink blooming instead of a ring popping in.
+    function spawnDrop(x: number, y: number, r: number, color: string) {
+      drops.push({
+        pts: makeCircle(x, y, GROW_START),
+        color,
+        alpha: 1,
+        fading: false,
+        growing: true,
+        gCx: x,
+        gCy: y,
+        gTarget: r,
+        gAge: 0,
+        gPrevR: 0,
+      });
+      capDrops();
+    }
+
+    function growingCount() {
+      let n = 0;
+      for (const d of drops) if (d.growing) n++;
+      return n;
+    }
+
+    function addDrop(x: number, y: number, r: number, color: string) {
+      // Bloom while the loop is live, but cap concurrent blooms so a burst of
+      // clicks (3 rings each) can't pile up full-field deform passes per frame;
+      // extras drop in instantly, which reads fine amid a click storm.
+      if (running && growingCount() < MAX_GROWING) spawnDrop(x, y, r, color);
+      else placeDrop(x, y, r, color);
+    }
+
+    // Advance every blooming drop one frame. A single deform pass grows the
+    // drop's OWN ring (it is the exception to skipGrowing) and pushes the
+    // settled field by just this frame's increment; other still-growing drops
+    // are left alone so concurrent blooms stay independent. Displacing the
+    // drop's existing points (rather than redrawing a circle) lets it keep any
+    // breeze/stir it picks up mid-bloom, so there's no jump when it settles.
+    function growDrops(dt: number) {
+      const gdt = Math.min(dt, 40); // a refocus dt spike shouldn't over-bloom in one step
+      for (const d of drops) {
+        if (!d.growing) continue;
+        d.gAge = (d.gAge ?? 0) + gdt;
+        const f = easeOut(Math.min(d.gAge / GROW_MS, 1));
+        const rEff = (d.gTarget ?? 0) * f;
+        const prev = d.gPrevR ?? 0;
+        const dr = Math.sqrt(Math.max(rEff * rEff - prev * prev, 0));
+        if (dr > 0.001) deformByDrop(d.gCx!, d.gCy!, dr, true, d);
+        d.gPrevR = rEff;
+        if (f >= 1) d.growing = false;
       }
     }
 
@@ -227,6 +314,7 @@ export function Suminagashi() {
 
     function tick(dt: number) {
       ambient(dt);
+      growDrops(dt); // bloom open any drops added since last frame
 
       dropTimer -= dt;
       if (dropTimer <= 0) {
@@ -279,13 +367,17 @@ export function Suminagashi() {
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
       const inside = x >= 0 && y >= 0 && x <= r.width && y <= r.height;
-      if (inside && px !== null && running) {
+      if (inside && px !== null && (running || reduced)) {
         const dx = x - px;
         const dy = y - py;
         const speed = Math.hypot(dx, dy);
         if (speed > 2) {
           const z = Math.min(speed * 0.08, 2.2) * (e.buttons ? 2.5 : 1);
           tine(x, y, dx, dy, z, e.buttons ? 90 : 50);
+          if (!running) {
+            resampleAll(); // reduced motion: redraw the static frame after a stir
+            draw();
+          }
         }
       }
       px = inside ? x : null;
@@ -319,10 +411,10 @@ export function Suminagashi() {
     );
     io.observe(canvas);
 
-    if (!reduced) {
-      window.addEventListener("pointermove", onMove, { passive: true });
-      window.addEventListener("pointerdown", onDown, { passive: true });
-    }
+    // Interaction stays on even under reduced motion: clicks place instant
+    // (non-animated) drops and pointer moves stir the otherwise-static pattern.
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown, { passive: true });
 
     return () => {
       stop();
