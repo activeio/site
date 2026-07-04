@@ -15,6 +15,7 @@ export type Project = {
   name: string;
   kind: string;
   blurb: string;
+  href?: string;
 };
 
 export const site = {
@@ -65,6 +66,13 @@ export const site = {
   ] satisfies Service[],
 
   projects: [
+    {
+      id: "easel",
+      name: "Easel",
+      kind: "Dev tools · MCP server",
+      blurb: "A local MCP server that puts a human in an AI agent's image loop.",
+      href: "https://easel-web-one.vercel.app",
+    },
     {
       id: "ledger",
       name: "Ledger",
