@@ -20,8 +20,8 @@ export function Work() {
         </Reveal>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2">
-          {site.projects.map((p, i) => (
-            <Reveal key={p.id} delay={i * 0.06}>
+          {site.projects.map((p, i) => {
+            const card = (
               <article className="group flex h-full flex-col justify-between rounded-xl border border-line bg-background p-6 transition-all hover:-translate-y-1 hover:border-ink/25 hover:shadow-lg hover:shadow-black/5">
                 <div>
                   <div className="flex items-center justify-between">
@@ -36,8 +36,19 @@ export function Work() {
                   </p>
                 </div>
               </article>
-            </Reveal>
-          ))}
+            );
+            return (
+              <Reveal key={p.id} delay={i * 0.06}>
+                {p.href ? (
+                  <a href={p.href} target="_blank" rel="noreferrer" className="block h-full">
+                    {card}
+                  </a>
+                ) : (
+                  card
+                )}
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>
