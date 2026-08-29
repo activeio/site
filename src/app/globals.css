@@ -19,19 +19,7 @@
   --font-display: Georgia, "Times New Roman", "Hiragino Mincho ProN",
     "Yu Mincho", "Noto Serif JP", serif;
 
-  --animate-blink: blink 1.05s steps(1) infinite;
   --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  50.01%,
-  100% {
-    opacity: 0;
-  }
 }
 
 @keyframes pulse-dot {

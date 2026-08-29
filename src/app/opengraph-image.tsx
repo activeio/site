@@ -1,6 +1,9 @@
 import { ImageResponse } from "next/og";
 import { site } from "@/lib/site";
 
+// Prerender the OG image at build time — required by `output: "export"`.
+export const dynamic = "force-static";
+
 export const alt = `${site.name} — Full-Stack Engineer`;
 export const size = {
   width: 1200,
