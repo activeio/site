@@ -400,8 +400,9 @@ export function FluidInk() {
 
     // ---------- go ----------
     resize();
-    // brief warm-up so the water is already alive on first paint
-    for (let n = 0; n < (reduced ? 150 : 110); n++) step(16.7);
+    // brief warm-up so the water is already alive on first paint — kept
+    // small so it doesn't block the main thread before first paint
+    for (let n = 0; n < 16; n++) step(16.7);
     render();
 
     const ro = new ResizeObserver(resize);

@@ -1,6 +1,5 @@
 import { MagneticButton } from "@/components/MagneticButton";
 import { InkBackground } from "@/components/InkBackground";
-import { InkBowl } from "@/components/InkBowl";
 import { site, mailtoHref } from "@/lib/site";
 
 export function Hero() {
@@ -11,13 +10,8 @@ export function Hero() {
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-14">
           {/* left — pitch */}
           <div>
-            <p className="mb-6 flex items-baseline gap-3 text-muted">
-              <span lang="ja" className="font-display text-lg text-accent">
-                ものづくり
-              </span>
-              <span className="font-mono text-xs uppercase tracking-[0.18em]">
-                the art of making things
-              </span>
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.18em] text-muted">
+              the art of making things
             </p>
             <h1 className="text-balance font-display text-4xl font-normal leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
               {site.hero.headline}
@@ -27,23 +21,42 @@ export function Hero() {
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-6">
               <MagneticButton
-                href={mailtoHref}
+                href="#work"
                 className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-medium text-background transition-colors hover:bg-accent"
               >
-                Start a project →
+                View my work →
               </MagneticButton>
               <a
-                href="#work"
+                href={mailtoHref}
                 className="border-b border-muted/40 pb-0.5 text-sm text-muted transition-colors hover:border-ink hover:text-ink"
               >
-                See our work
+                Email me
               </a>
             </div>
+
+            {/* fact strip — real numbers pulled from the Grain case study below */}
+            <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-4 font-mono text-xs">
+              {site.projects[0].metrics.map((m) => (
+                <div key={m.label}>
+                  <dt className="uppercase tracking-[0.14em] text-muted/70">
+                    {m.label}
+                  </dt>
+                  <dd className="mt-1 text-ink">{m.value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
-          {/* right — a bowl of water */}
+          {/* right — placeholder for a real portrait photo, dropped in later */}
           <div className="lg:pl-2">
-            <InkBowl />
+            <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-line bg-background shadow-[0_8px_40px_-12px_rgba(43,42,38,0.12)]">
+              <span
+                aria-hidden="true"
+                className="grid h-24 w-24 place-items-center rounded-full bg-accent-soft font-display text-4xl text-accent"
+              >
+                P
+              </span>
+            </div>
           </div>
         </div>
       </div>

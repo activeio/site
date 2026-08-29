@@ -22,7 +22,9 @@ export function CopyEmail() {
       onClick={copy}
       className="inline-flex items-center justify-center gap-2 rounded-lg border border-line px-5 py-3 font-mono text-sm text-ink transition-colors hover:border-ink"
     >
-      {copied ? "copied ✓" : site.email}
+      <span role="status" aria-live="polite">
+        {copied ? "copied ✓" : site.email}
+      </span>
     </button>
   );
 }

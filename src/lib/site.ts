@@ -1,95 +1,136 @@
 /**
  * Single source of truth for all editable site content.
- * Change copy, services, projects and contact details here.
+ * Change copy, skills, experience, case studies and contact details here.
  */
 
-export type Service = {
-  id: string;
-  kanji: string;
+export type SkillGroup = {
+  category: string;
+  items: string[];
+};
+
+export type Experience = {
   title: string;
+  period: string;
   blurb: string;
 };
 
-export type Project = {
+export type CaseStudy = {
   id: string;
   name: string;
-  kind: string;
-  blurb: string;
+  oneLiner: string;
+  role: "solo build" | "contributed";
+  stack: string[];
+  metrics: { label: string; value: string }[];
+  body: {
+    problem: string;
+    decisions: string;
+    outcome: string;
+  };
+  links?: {
+    live?: string;
+    repo?: string;
+  };
 };
 
 export const site = {
-  name: "active IO labs",
-  brandMark: "active_io_labs",
+  name: "Pradeep",
+  brandMark: "Pradeep",
   domain: "activeiolabs.com",
-  email: "sweswepradeep@gmail.com",
+  email: "pradeexsu@gmail.com",
 
   description:
-    "A small software studio. Ideas become web & mobile products — quietly, carefully, fast.",
+    "I build web & mobile products — quietly, carefully, fast.",
 
   hero: {
-    headline: "We craft software & apps.",
-    sub: "A tiny product studio. Ideas become web & mobile products — quietly, carefully, fast.",
+    headline: "I build software & apps.",
+    sub: "A solo full-stack engineer. Ideas become web & mobile products — quietly, carefully, fast.",
   },
 
   nav: [
     { label: "Work", href: "#work" },
-    { label: "Services", href: "#services" },
+    { label: "About", href: "#about" },
     { label: "Contact", href: "#contact" },
   ],
 
-  services: [
+  skills: [
     {
-      id: "web",
-      kanji: "網",
-      title: "Web apps",
-      blurb: "Fast, modern web apps that hold up under real users.",
+      category: "Languages",
+      items: ["TypeScript"],
     },
     {
-      id: "mobile",
-      kanji: "携",
-      title: "Mobile apps",
-      blurb: "iOS & Android from one codebase, with a native feel.",
+      category: "Frontend",
+      items: ["React", "Next.js", "React Native / Expo", "Tailwind CSS", "Motion"],
     },
     {
-      id: "mvp",
-      kanji: "芽",
-      title: "MVPs",
-      blurb: "The smallest thing that proves the idea works.",
+      category: "Backend",
+      items: ["Node.js", "Bun", "Hono"],
     },
     {
-      id: "ai",
-      kanji: "知",
-      title: "AI features",
-      blurb: "Useful AI, wired in without the hype.",
+      category: "Data & Infra",
+      items: ["Postgres", "Supabase", "DigitalOcean", "nginx", "GitHub Actions"],
     },
-  ] satisfies Service[],
+    {
+      category: "Integrations & Ops",
+      items: [
+        "Razorpay",
+        "WhatsApp Cloud API",
+        "Resend",
+        "Shiprocket",
+        "Sentry",
+        "Playwright",
+      ],
+    },
+  ] satisfies SkillGroup[],
+
+  experience: [
+    {
+      title: "Independent — Solo Full-Stack Engineer",
+      period: "Ongoing",
+      blurb:
+        "Freelance, full-stack, end to end — product, backend, DevOps and security. See the Grain case study below for a full breakdown.",
+    },
+  ] satisfies Experience[],
 
   projects: [
     {
-      id: "ledger",
-      name: "Ledger",
-      kind: "Fintech · Web app",
-      blurb: "A realtime money dashboard with reconciliation and reporting.",
+      id: "grain",
+      name: "Grain",
+      role: "solo build",
+      oneLiner:
+        "Solo full-stack engineer for a factory-direct furniture e-commerce platform — a Next.js storefront, a Bun/Hono API, and a React Native admin app, shipped end-to-end with the DevOps, cost engineering, and security review to run it in production.",
+      stack: [
+        "TypeScript",
+        "Next.js 15",
+        "React Native / Expo",
+        "Bun",
+        "Hono",
+        "Supabase (Postgres, Auth, Storage, RLS)",
+        "nginx",
+        "GitHub Actions",
+        "DigitalOcean",
+        "Razorpay",
+        "WhatsApp Cloud API",
+        "Resend",
+        "Shiprocket",
+        "Sentry",
+        "Playwright",
+      ],
+      metrics: [
+        { label: "Video payload", value: "2MB to 317KB" },
+        { label: "Order-count queries", value: "N queries to 1 RPC" },
+        { label: "Backend test suite", value: "1,600+ tests" },
+        { label: "Client surfaces", value: "3 apps, 1 monorepo, solo-run" },
+      ],
+      body: {
+        problem:
+          "Diagnosed a Supabase Cached-Egress overage to root cause: crawler traffic x image variants x cold caches, with no CDN in front of storage.",
+        decisions:
+          "Remediated across the stack — image thumbnails, next/image tuning, video re-encoding, payload/DTO trimming, DB query consolidation (N count-queries collapsed into one RPC), and a CDN architecture plan. Also built the product's multi-party 'white-label' order flow (a distributor buys on credit; a different end-customer receives it and sees a fully white-labeled tracking page — no brand, no price), GitHub Actions CI/CD coordinating backend + web + web-admin deploys, a native Android APK build with a custom in-app self-updater distributed via Supabase Storage, service-key/RLS and price-integrity security audits, and a 1,600+ test backend suite plus Playwright E2E.",
+        outcome:
+          "A production e-commerce platform running live for real users on a single DigitalOcean droplet — designed, built, and operated solo, with the egress overage remediated and a coordinated multi-app release pipeline in place.",
+      },
     },
-    {
-      id: "pulse",
-      name: "Pulse",
-      kind: "Health · Mobile",
-      blurb: "A habit & fitness tracker with offline-first sync.",
-    },
-    {
-      id: "forge",
-      name: "Forge",
-      kind: "Internal tools · Web app",
-      blurb: "An internal platform that replaced a dozen spreadsheets.",
-    },
-    {
-      id: "atlas",
-      name: "Atlas",
-      kind: "Logistics · MVP",
-      blurb: "A route-planning MVP shipped in six weeks.",
-    },
-  ] satisfies Project[],
+  ] satisfies CaseStudy[],
 
   socials: [
     { label: "GitHub", href: "https://github.com/activeio" },
@@ -98,7 +139,7 @@ export const site = {
 } as const;
 
 export const mailtoHref = `mailto:${site.email}?subject=${encodeURIComponent(
-  "Project enquiry — active IO labs",
+  "Project enquiry",
 )}&body=${encodeURIComponent(
-  "Hi active IO labs,\n\nI'd love to talk about a project.\n\n",
+  "Hi Pradeep,\n\nI'd love to talk about a project.\n\n",
 )}`;

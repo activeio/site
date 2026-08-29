@@ -3,7 +3,7 @@ import { site } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${site.name} — software studio`,
+    name: `${site.name} — Full-Stack Engineer`,
     short_name: site.name,
     description: site.description,
     start_url: "/",

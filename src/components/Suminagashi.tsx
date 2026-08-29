@@ -400,7 +400,7 @@ export function Suminagashi() {
 
     // ---------- go ----------
     resize();
-    seed(reduced ? 5 : 3, reduced ? 10 : 8);
+    seed(reduced ? 2 : 3, reduced ? 6 : 8);
     draw();
 
     const ro = new ResizeObserver(resize);

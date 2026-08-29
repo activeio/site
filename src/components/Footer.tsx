@@ -8,10 +8,7 @@ export function Footer() {
         <div>
           <Brand size="sm" />
           <p className="mt-2 text-xs text-muted">
-            <span lang="ja" className="font-display">
-              ものづくり
-            </span>{" "}
-            · software studio · {new Date().getFullYear()}
+            {site.name} · full-stack engineer · {new Date().getFullYear()}
           </p>
         </div>
 

@@ -2,6 +2,8 @@
  * Brand mark: 活 (katsu — "active, alive") as a soft ink seal,
  * with a quiet serif wordmark.
  */
+import { site } from "@/lib/site";
+
 export function Brand({ size = "md" }: { size?: "md" | "sm" }) {
   const sm = size === "sm";
   return (
@@ -20,7 +22,7 @@ export function Brand({ size = "md" }: { size?: "md" | "sm" }) {
           sm ? "text-base" : "text-lg"
         }`}
       >
-        active <span className="text-accent">io</span> labs
+        {site.name}
       </span>
     </a>
   );
