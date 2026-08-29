@@ -18,6 +18,42 @@ npm run preview    # serve out/ at http://localhost:3000 to check it locally
 
 ---
 
+## 0. First: move the domain off Website Builder
+
+As of this writing `activeiolabs.com` already resolves to Hostinger and serves
+a **Hostinger Website Builder** placeholder ("Our exciting new website will
+launch soon"):
+
+```console
+$ curl -sSI https://activeiolabs.com/ | grep -i '^server\|^x-hcdn'
+server: hcdn
+x-hcdn-cache-status: HIT
+$ curl -sS https://activeiolabs.com/ | grep -o 'generator" content="[^"]*"'
+generator" content="Hostinger Website Builder"
+```
+
+Website Builder is a separate product from shared hosting: it publishes
+through Hostinger's own CDN, **not** from a `public_html` document root. While
+the domain is attached to it, uploading files over FTP changes nothing that
+visitors see — `https://activeiolabs.com/manifest.webmanifest` currently
+returns 404, which is the Builder responding, not Apache.
+
+So before either deploy path below will do anything:
+
+hPanel -> **Websites** -> the `activeiolabs.com` entry -> confirm it is a
+Website Builder site, then detach the domain from it and attach the domain to
+the **hosting plan** instead (Website Builder -> *Manage* -> domain settings,
+or *Add Website* on the hosting plan and point `activeiolabs.com` at it).
+
+**This replaces the live placeholder page** — it is a visible change to a
+domain that is currently serving, so make it deliberately. The Builder site
+itself is not deleted by detaching the domain; it stays reachable on its
+`*.hostingersite.com` preview URL.
+
+Once the domain serves from `public_html`, an unconfigured document root shows
+Hostinger's default index instead of the Builder page — that is the signal
+that step 2 can proceed.
+
 ## 1. Point the hosting at the domain
 
 In [hPanel](https://hpanel.hostinger.com):
@@ -27,7 +63,9 @@ In [hPanel](https://hpanel.hostinger.com):
    the path is `/public_html` (primary domain) or
    `/domains/activeiolabs.com/public_html` (addon domain); the deploy
    workflow's `server-dir` must match.
-2. **DNS**
+2. **DNS** — the domain already resolves to Hostinger
+   (`2a02:4780:…`), so this is likely already done. Only if it stops
+   resolving, or you move the domain to another registrar:
    - *Domain registered at Hostinger*: nothing to do — it is already pointed.
    - *Registered elsewhere*: at the current registrar, either
      - set the nameservers to Hostinger's (`ns1.dns-parking.com`,
@@ -112,6 +150,7 @@ scroll animations run, and an unknown URL such as
 
 | Symptom | Cause |
 |---------|-------|
+| "Website will launch soon" placeholder | The domain is still attached to Website Builder, not the hosting plan — see step 0. Nothing uploaded to `public_html` will show until that is changed. |
 | Hostinger placeholder page | `public_html` still has `default.php`/`index.php` — Apache prefers it over `index.html`. Delete it. |
 | Site loads, no CSS/JS | The `_next/` folder did not upload. Re-upload; make sure hidden/underscore folders are included. |
 | Redirect loop | hPanel "Force HTTPS" is on *and* `.htaccess` redirects. Turn the toggle off. |
