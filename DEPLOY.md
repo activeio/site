@@ -39,6 +39,13 @@ Two gotchas:
   activeiolabs.com**. A token from another account authenticates fine and
   then fails per-domain: `403 [DNS:4002] Customer does not own
   activeiolabs.com domain`.
+- The API does **not** cover file management for a regular Premium Web
+  Hosting plan. `GET /api/agency-hosting/v1/websites` and `.../orders` both
+  return `total: 0` for such an account — those endpoints (and the
+  `files/upload-urls` and `files/import-archive` upload paths under them)
+  belong to Hostinger's separate agency-hosting product. So the MCP servers
+  can manage the domain, DNS and billing, but **cannot upload the site**;
+  that still goes over FTP (step 2a) or through File Manager (step 2b).
 - MCP servers are loaded when a session starts, so a newly added server
   needs a fresh session before its tools appear.
 
@@ -48,7 +55,14 @@ Two gotchas:
 
 As of this writing `activeiolabs.com` already resolves to Hostinger and serves
 a **Hostinger Website Builder** placeholder ("Our exciting new website will
-launch soon"):
+launch soon"). The zone points the apex and `www` at the Builder site:
+
+```
+@    ALIAS  palegoldenrod-frog-482387.hostingersite.com.
+www  CNAME  palegoldenrod-frog-482387.hostingersite.com.
+```
+
+and the page itself identifies as Builder output:
 
 ```console
 $ curl -sSI https://activeiolabs.com/ | grep -i '^server\|^x-hcdn'
