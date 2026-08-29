@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "preview": "npx --yes serve@14 out -l 3000",
+    "package:hostinger": "npm run build && rm -f activeiolabs-site.zip && (cd out && zip -qr ../activeiolabs-site.zip .) && echo 'Created activeiolabs-site.zip - upload & extract into public_html'",
     "lint": "eslint"
   },
   "dependencies": {

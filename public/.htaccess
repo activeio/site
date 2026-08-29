@@ -1,0 +1,75 @@
+# activeiolabs.com — Hostinger shared hosting (Apache/LiteSpeed)
+# This file is copied verbatim into the static export (out/.htaccess) and must
+# sit at the root of public_html.
+
+# ---------------------------------------------------------------- routing ---
+Options -MultiViews
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS. (Leave hPanel's "Force HTTPS" toggle off so this runs once.)
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Canonical host: www.activeiolabs.com -> activeiolabs.com
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  # Next.js exports every route as <route>/index.html (trailingSlash: true),
+  # so add the missing slash before Apache gives up.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+[^/])$ /$1/ [R=301,L]
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+# ------------------------------------------------------------- mime types ---
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType image/svg+xml            .svg
+  AddType font/woff2               .woff2
+</IfModule>
+
+# ------------------------------------------------------------ compression ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+    application/javascript application/json application/manifest+json \
+    image/svg+xml
+</IfModule>
+
+# ----------------------------------------------------------------- caching ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Content-hashed build assets — safe to cache forever.
+  <IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|woff2)$">
+      Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+  </IfModule>
+  # HTML must always be revalidated so deploys are picked up immediately.
+  ExpiresByType text/html "access plus 0 seconds"
+  <IfModule mod_headers.c>
+    <FilesMatch "\.html$">
+      Header set Cache-Control "public, max-age=0, must-revalidate"
+    </FilesMatch>
+  </IfModule>
+  ExpiresByType image/png  "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+</IfModule>
+
+# ---------------------------------------------------------------- security ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Don't serve dotfiles (except the ACME challenge used for SSL renewal).
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule (^|/)\. - [F]
+</IfModule>

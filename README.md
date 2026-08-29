@@ -19,7 +19,8 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
-npm run build && npm start   # production build
+npm run build     # static export -> out/
+npm run preview   # serve out/ at http://localhost:3000
 ```
 
 ## Where things live
@@ -43,5 +44,11 @@ npm run build && npm start   # production build
 
 ## Deploy
 
-Push to GitHub, import into [Vercel](https://vercel.com/new) (zero config), then
-point the `activeiolabs.com` domain at the project.
+The site is a static export (`output: "export"`) hosted on **Hostinger** shared
+hosting: `next build` produces `out/`, which is served straight from
+`public_html`. Pushing to `main` builds and uploads it via
+`.github/workflows/deploy-hostinger.yml`.
+
+See **[DEPLOY.md](./DEPLOY.md)** for the FTP secrets, the `activeiolabs.com`
+domain/DNS/SSL setup, the manual `npm run package:hostinger` upload path, and
+troubleshooting.

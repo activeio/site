@@ -1,0 +1,51 @@
+name: Deploy to Hostinger
+
+# Builds the static export and syncs it into Hostinger's public_html over FTP.
+# Requires three repository secrets (Settings -> Secrets and variables -> Actions):
+#   HOSTINGER_FTP_HOST      e.g. ftp.activeiolabs.com  (hPanel -> Files -> FTP Accounts)
+#   HOSTINGER_FTP_USERNAME  e.g. u123456789.activeiolabs.com
+#   HOSTINGER_FTP_PASSWORD
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build static export
+        run: npm run build
+
+      - name: Fail if the export is empty
+        run: test -f out/index.html && test -f out/.htaccess
+
+      - name: Upload to public_html
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./out/
+          server-dir: /public_html/
+          # Keep files Hostinger puts there itself; everything else mirrors `out/`.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            default.php
+            .well-known/**
