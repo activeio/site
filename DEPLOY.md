@@ -18,6 +18,32 @@ npm run preview    # serve out/ at http://localhost:3000 to check it locally
 
 ---
 
+## Hostinger MCP servers (optional)
+
+`.mcp.json` registers Hostinger's MCP servers so a Claude Code session can
+manage the domain, DNS and hosting directly. It reads the token from the
+environment rather than storing it:
+
+```json
+"env": { "HOSTINGER_API_TOKEN": "${HOSTINGER_API_TOKEN}" }
+```
+
+Set `HOSTINGER_API_TOKEN` where your session gets its environment — for
+Claude Code on the web, the environment's variables; locally, your shell
+profile. Generate the token in hPanel -> **API**. **Never commit the token
+itself** — the expansion above exists so it stays out of git.
+
+Two gotchas:
+
+- The token must come from the Hostinger account that actually **owns
+  activeiolabs.com**. A token from another account authenticates fine and
+  then fails per-domain: `403 [DNS:4002] Customer does not own
+  activeiolabs.com domain`.
+- MCP servers are loaded when a session starts, so a newly added server
+  needs a fresh session before its tools appear.
+
+---
+
 ## 0. First: move the domain off Website Builder
 
 As of this writing `activeiolabs.com` already resolves to Hostinger and serves
