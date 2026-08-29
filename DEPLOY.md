@@ -104,7 +104,7 @@ curl -sS  https://activeiolabs.com       | grep -o "<title>[^<]*"
 curl -sSI https://activeiolabs.com/manifest.webmanifest | grep -i content-type
 ```
 
-Then in a browser: the hero terminal accepts commands (`help`, `play`), the
+Then in a browser: the hero ink bowl stirs as the cursor moves through it, the
 scroll animations run, and an unknown URL such as
 `https://activeiolabs.com/nope` renders the 404 page.
 

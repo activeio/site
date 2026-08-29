@@ -27,6 +27,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run lint
+
       - name: Build static export
         run: npm run build
 

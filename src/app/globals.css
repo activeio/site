@@ -14,33 +14,12 @@
   --color-accent: #4e8a6e;
   --color-accent-soft: #eaf1ec;
 
-  /* terminal palette */
-  --color-term-bg: #0b0f0e;
-  --color-term-bar: #161b1a;
-  --color-term-text: #c9d6d0;
-  --color-term-dim: #5f7068;
-  --color-term-green: #3ddc97;
-  --color-term-cyan: #56c7d6;
-  --color-term-yellow: #e8c468;
-
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: Georgia, "Times New Roman", "Hiragino Mincho ProN",
     "Yu Mincho", "Noto Serif JP", serif;
 
-  --animate-blink: blink 1.05s steps(1) infinite;
   --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  50.01%,
-  100% {
-    opacity: 0;
-  }
 }
 
 @keyframes pulse-dot {
@@ -70,18 +49,6 @@ body {
 .sumi-fade {
   -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 35%, transparent 80%);
   mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 35%, transparent 80%);
-}
-
-/* Thin custom scrollbar inside the terminal screen */
-.term-screen::-webkit-scrollbar {
-  width: 8px;
-}
-.term-screen::-webkit-scrollbar-thumb {
-  background: #2a322f;
-  border-radius: 8px;
-}
-.term-screen::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,10 +1,9 @@
 # active IO labs — activeiolabs.com
 
 The marketing site for **active IO labs**, a software & apps building studio.
-A clean, minimal landing page with a twist: the hero is a **live interactive
-terminal** (the name is _active IO labs_ → input/output). Visitors can type
-commands like `help`, `about`, `services`, `contact`, and even `play` a small
-guess-the-number game.
+A clean, minimal landing page with a twist: the hero is a **bowl of water
+running a live ink simulation** — move the cursor through it to stir, click to
+drop ink. Sumi ink on warm paper, one muted pine accent.
 
 Built with **Next.js 16** (App Router), **TypeScript**, **Tailwind CSS v4**, and
 **Motion** for scroll/hover animations.
@@ -28,18 +27,23 @@ npm run preview   # serve out/ at http://localhost:3000
 | Path | What |
 |------|------|
 | `src/lib/site.ts` | **Edit content here** — name, email, tagline, services, projects, socials |
-| `src/components/terminal/Terminal.tsx` | The interactive hero terminal (client component) |
-| `src/components/terminal/commands.tsx` | Command registry (`help`, `about`, `play`, …). Add commands here |
 | `src/components/{Nav,Hero,Services,Work,Contact,Footer}.tsx` | Page sections |
+| `src/components/InkBowl.tsx` | The hero artifact — interactive bowl of ink-in-water |
+| `src/components/FluidInk.tsx` | The fluid simulation the bowl renders (stable-fluids on canvas) |
+| `src/components/{Suminagashi,InkBackground}.tsx` | Ink-marbling canvas behind the hero |
+| `src/components/{Reveal,MagneticButton,Brand,CopyEmail}.tsx` | Small shared pieces |
 | `src/app/page.tsx` | Composes the page |
-| `src/app/globals.css` | Theme tokens (colors, accent, terminal palette) + keyframes |
+| `src/app/globals.css` | Theme tokens (colors, accent, type) + keyframes |
 | `src/app/layout.tsx` | Fonts + SEO metadata |
 
-### The terminal
-- Type a command and hit enter. `↑`/`↓` walks history, `Tab` autocompletes,
-  `Ctrl+L` clears.
-- Add a command: drop an entry into the `commands` map in
-  `commands.tsx`. Mark `hidden: true` to keep it out of `help` (an easter egg).
+### The ink
+- `FluidInk` advects a coarse velocity grid and projects it divergence-free
+  each frame; pointer movement injects velocity, a click drops pigment.
+- `Suminagashi` is the cheaper background effect — ink rings pushed outward by
+  each new drop.
+- Both are canvas client components; under
+  `prefers-reduced-motion: reduce` they settle into a static composition
+  instead of animating.
 - Contact email is read from `src/lib/site.ts` — change it in one place.
 
 ## Deploy
