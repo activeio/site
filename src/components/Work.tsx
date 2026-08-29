@@ -14,31 +14,30 @@ function CaseStudyRow({
 }) {
   const [expanded, setExpanded] = useState(!!defaultExpanded);
   const { live, repo } = project.links ?? {};
+  const hasBody = !!project.body;
+  const hasDetail = hasBody || live || repo;
 
-  return (
-    <article className="rounded-xl border border-line bg-background p-6 transition-colors hover:border-ink/25">
-      <button
-        type="button"
-        onClick={() => setExpanded((v) => !v)}
-        aria-expanded={expanded}
-        className="flex w-full flex-col items-start gap-3 text-left"
-      >
-        <div className="flex w-full items-center justify-between gap-4">
-          <div className="flex items-baseline gap-3">
-            <h3 className="text-xl font-medium">{project.name}</h3>
-            <span className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-              {project.role}
-            </span>
-          </div>
+  const header = (
+    <>
+      <div className="flex w-full items-center justify-between gap-4">
+        <div className="flex items-baseline gap-3">
+          <h3 className="text-xl font-medium">{project.name}</h3>
+          <span className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
+            {project.role}
+          </span>
+        </div>
+        {hasDetail && (
           <span className="shrink-0 font-mono text-xs text-muted">
             {expanded ? "close −" : "expand +"}
           </span>
-        </div>
+        )}
+      </div>
 
-        <p className="max-w-2xl text-sm leading-relaxed text-muted">
-          {project.oneLiner}
-        </p>
+      <p className="max-w-2xl text-sm leading-relaxed text-muted">
+        {project.oneLiner}
+      </p>
 
+      {project.metrics.length > 0 && (
         <div className="flex flex-wrap gap-2 pt-1">
           {project.metrics.map((m) => (
             <span
@@ -49,7 +48,9 @@ function CaseStudyRow({
             </span>
           ))}
         </div>
+      )}
 
+      {project.stack.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1">
           {project.stack.map((s) => (
             <span
@@ -60,34 +61,55 @@ function CaseStudyRow({
             </span>
           ))}
         </div>
-      </button>
+      )}
+    </>
+  );
+
+  return (
+    <article className="rounded-xl border border-line bg-background p-6 transition-colors hover:border-ink/25">
+      {hasDetail ? (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
+          className="flex w-full flex-col items-start gap-3 text-left"
+        >
+          {header}
+        </button>
+      ) : (
+        <div className="flex w-full flex-col items-start gap-3">{header}</div>
+      )}
 
       {expanded && (
         <div className="mt-6 space-y-5 border-t border-line pt-6">
-          <div>
-            <h4 className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
-              Problem
-            </h4>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-              {project.body.problem}
-            </p>
-          </div>
-          <div>
-            <h4 className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
-              Decisions
-            </h4>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-              {project.body.decisions}
-            </p>
-          </div>
-          <div>
-            <h4 className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
-              Outcome
-            </h4>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-              {project.body.outcome}
-            </p>
-          </div>
+          {project.body && (
+            <>
+              <div>
+                <h4 className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
+                  Problem
+                </h4>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+                  {project.body.problem}
+                </p>
+              </div>
+              <div>
+                <h4 className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
+                  Decisions
+                </h4>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+                  {project.body.decisions}
+                </p>
+              </div>
+              <div>
+                <h4 className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
+                  Outcome
+                </h4>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+                  {project.body.outcome}
+                </p>
+              </div>
+            </>
+          )}
 
           {(live || repo) && (
             <div className="flex flex-wrap gap-6 font-mono text-xs uppercase tracking-[0.14em] text-muted">

@@ -21,7 +21,7 @@ export type CaseStudy = {
   role: "solo build" | "contributed";
   stack: string[];
   metrics: { label: string; value: string }[];
-  body: {
+  body?: {
     problem: string;
     decisions: string;
     outcome: string;
@@ -129,6 +129,16 @@ export const site = {
         outcome:
           "A production e-commerce platform running live for real users on a single DigitalOcean droplet — designed, built, and operated solo, with the egress overage remediated and a coordinated multi-app release pipeline in place.",
       },
+    },
+    {
+      id: "easel",
+      name: "Easel",
+      role: "solo build",
+      oneLiner:
+        "A local MCP server that puts a human in an AI agent's image loop.",
+      stack: [],
+      metrics: [],
+      links: { live: "https://easel-web-one.vercel.app" },
     },
   ] satisfies CaseStudy[],
 
