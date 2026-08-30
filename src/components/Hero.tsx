@@ -47,15 +47,73 @@ export function Hero() {
             </dl>
           </div>
 
-          {/* right — placeholder for a real portrait photo, dropped in later */}
+          {/* right — the Grain platform at a glance: the system that's actually live */}
           <div className="lg:pl-2">
-            <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-line bg-background shadow-[0_8px_40px_-12px_rgba(43,42,38,0.12)]">
-              <span
-                aria-hidden="true"
-                className="grid h-24 w-24 place-items-center rounded-full bg-accent-soft font-display text-4xl text-accent"
-              >
-                P
-              </span>
+            <div className="rounded-2xl border border-line bg-background p-6 shadow-[0_8px_40px_-12px_rgba(43,42,38,0.12)] sm:p-7">
+              <div className="flex items-center justify-between gap-4">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
+                  in production — grain
+                </p>
+                <span className="flex items-center gap-2 font-mono text-[11px] text-accent">
+                  <span
+                    aria-hidden="true"
+                    className="h-2 w-2 animate-pulse-dot rounded-full bg-accent"
+                  />
+                  live
+                </span>
+              </div>
+
+              <div className="mt-6 space-y-2.5 font-mono text-[11px] leading-snug">
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="rounded-lg border border-line bg-white/40 px-2 py-2.5 text-center text-muted">
+                    Storefront
+                    <span className="mt-0.5 block text-[10px] text-muted/60">
+                      Next.js
+                    </span>
+                  </div>
+                  <div className="rounded-lg border border-line bg-white/40 px-2 py-2.5 text-center text-muted">
+                    Admin app
+                    <span className="mt-0.5 block text-[10px] text-muted/60">
+                      React Native
+                    </span>
+                  </div>
+                  <div className="rounded-lg border border-line bg-white/40 px-2 py-2.5 text-center text-muted">
+                    Web admin
+                    <span className="mt-0.5 block text-[10px] text-muted/60">
+                      React
+                    </span>
+                  </div>
+                </div>
+
+                <div aria-hidden="true" className="text-center text-muted/50">
+                  ↓
+                </div>
+
+                <div className="rounded-lg border border-line bg-accent-soft px-3 py-2.5 text-center text-ink">
+                  API — Bun + Hono
+                </div>
+
+                <div aria-hidden="true" className="text-center text-muted/50">
+                  ↓
+                </div>
+
+                <div className="rounded-lg border border-line bg-white/40 px-3 py-2.5 text-center text-muted">
+                  Supabase · Postgres · Storage · RLS
+                  <span className="mt-0.5 block text-[10px] text-muted/60">
+                    one DigitalOcean droplet · nginx
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 text-[10px] uppercase tracking-[0.12em] text-muted/70">
+                  <span>GitHub Actions — ci/cd</span>
+                  <span>Sentry — monitoring</span>
+                </div>
+              </div>
+
+              <p className="mt-5 border-t border-line pt-4 font-mono text-[11px] text-muted">
+                3 apps · 1 API · 1 droplet — designed, built &amp; run by one
+                engineer
+              </p>
             </div>
           </div>
         </div>
