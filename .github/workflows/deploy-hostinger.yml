@@ -5,9 +5,9 @@ name: Deploy to Hostinger
 #   HOSTINGER_FTP_HOST      e.g. ftp.activeiolabs.com  (hPanel -> Files -> FTP Accounts)
 #   HOSTINGER_FTP_USERNAME  e.g. u123456789.activeiolabs.com
 #   HOSTINGER_FTP_PASSWORD
+# Manual only: the domain is served from the DigitalOcean droplet since
+# 2026-09-30 (see DEPLOY.md), so pushes no longer deploy here.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

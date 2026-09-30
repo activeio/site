@@ -1,4 +1,40 @@
-# Deploying activeiolabs.com to Hostinger
+# Deploying activeiolabs.com
+
+## Current: DigitalOcean droplet (since 2026-09-30)
+
+The static export is served by nginx on the droplet `168.144.20.21`
+(SSH `deploy@168.144.20.21`, key `~/.ssh/pramukhdarshan_droplet`, passwordless
+sudo). The droplet also runs pramukhdarshan.com and track.activeiolabs.com —
+their nginx sites are separate files; leave them alone.
+
+| What | Where |
+|---|---|
+| Files | `/var/www/activeiolabs` (owned by `deploy`) |
+| nginx site | `/etc/nginx/sites-available/activeiolabs.conf` (source: `deploy/nginx-activeiolabs.conf`), symlinked into `sites-enabled` |
+| HTTPS | Let's Encrypt via `certbot --nginx` (auto-renews) |
+
+**Deploy an update:** `./scripts/deploy-droplet.sh` (builds, then
+`rsync --delete` of `out/`; `.htaccess` is Apache-only and skipped). Pushing
+to `main` does **not** deploy.
+
+**DNS** (Hostinger zone for activeiolabs.com): `@` → `A 168.144.20.21`,
+`www` → `CNAME activeiolabs.com`. Don't touch the MX/DKIM/TXT mail records
+or `track`.
+
+**HTTPS** (done once, after DNS pointed at the droplet):
+
+```bash
+ssh deploy@168.144.20.21 'sudo certbot --nginx -d activeiolabs.com -d www.activeiolabs.com --redirect'
+```
+
+nginx sends `www` to the apex, and exported routes resolve as
+`<route>/index.html`, with `404.html` for anything else.
+
+Verify: `curl -sI https://activeiolabs.com/rankreels/privacy/` → `200`.
+
+---
+
+# Older path: Hostinger shared hosting
 
 The site is a **static export**. `next build` writes a self-contained
 `out/` folder (HTML, CSS, JS, self-hosted fonts, icons and `.htaccess`) that

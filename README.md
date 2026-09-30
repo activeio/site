@@ -34,6 +34,7 @@ npm run preview   # serve out/ at http://localhost:3000
 | `src/app/globals.css` | Theme tokens (colors, accent) + keyframes |
 | `src/app/layout.tsx` | Fonts + SEO metadata |
 | `src/app/{sitemap,robots,opengraph-image}.tsx` | SEO: sitemap, robots.txt, OG/Twitter share image |
+| `src/app/rankreels/privacy/page.tsx` | Privacy policy for the RankReels Android app (`/rankreels/privacy/`, linked from its Play listing) |
 
 ### Case studies
 
@@ -56,11 +57,15 @@ that array.
 
 ## Deploy
 
-The site is a static export (`output: "export"`) hosted on **Hostinger** shared
-hosting: `next build` produces `out/`, which is served straight from
-`public_html`. Pushing to `main` builds and uploads it via
-`.github/workflows/deploy-hostinger.yml`.
+The site is a static export (`output: "export"`): `next build` produces `out/`.
+Since 2026-09-30 it is served by **nginx on the DigitalOcean droplet**
+(168.144.20.21) from `/var/www/activeiolabs`:
 
-See **[DEPLOY.md](./DEPLOY.md)** for the FTP secrets, the `activeiolabs.com`
-domain/DNS/SSL setup, the manual `npm run package:hostinger` upload path, and
-troubleshooting.
+```bash
+./scripts/deploy-droplet.sh     # build + rsync out/ to the droplet
+```
+
+See **[DEPLOY.md](./DEPLOY.md)** — the droplet section at the top covers the
+nginx site, DNS and HTTPS. The older Hostinger shared-hosting path
+(`npm run package:hostinger`, and the FTP workflow now limited to manual runs)
+is kept below it but no longer serves the domain.
