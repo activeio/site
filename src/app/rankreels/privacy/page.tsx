@@ -5,11 +5,11 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "RankReels privacy policy",
   description:
-    "How the RankReels Android app handles your data: your clips stay on your phone; ads and purchases are handled by Google.",
+    "How the RankReels Android app handles your data: your clips stay on your phone; ads are handled by Google AdMob.",
   alternates: { canonical: `https://${site.domain}/rankreels/privacy/` },
 };
 
-const UPDATED = "30 September 2026";
+const UPDATED = "4 October 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -36,14 +36,14 @@ export default function RankReelsPrivacy() {
         RankReels is an Android app for making Top 5 countdown videos, published by activeiolabs
         (&ldquo;we&rdquo;). This policy explains what happens to your data when you use it. In short:
         you don&rsquo;t need an account, we run no servers, and your clips and projects stay on your
-        phone. The free version shows ads from Google AdMob, and purchases go through Google Play.
+        phone. RankReels is free and shows ads from Google AdMob.
       </p>
 
       <Section title="What stays on your phone">
         <p>
           The clips and music you pick, your projects (titles, rank names, styles and edits), their
           thumbnails and the videos you render are stored in the app&rsquo;s private storage on your
-          device. So are your settings, such as the colour theme and whether you have RankReels Pro.
+          device. So are your settings, such as the colour theme.
           We never receive any of it.
         </p>
         <p>
@@ -72,9 +72,9 @@ export default function RankReelsPrivacy() {
         </ul>
       </Section>
 
-      <Section title="Ads (free version)">
+      <Section title="Ads">
         <p>
-          The free version shows banner and full-screen ads from Google AdMob. To show and measure
+          RankReels shows banner and full-screen ads from Google AdMob. To show and measure
           ads and to prevent fraud, Google may collect information from your device, such as your
           advertising ID, IP address, device and app information, and how you interact with ads.
           Google handles this data under its own policy:{" "}
@@ -88,20 +88,6 @@ export default function RankReelsPrivacy() {
           your consent through Google&rsquo;s consent form before ads are personalised, and you can
           change your choice any time from <em>Ad privacy choices</em> on the app&rsquo;s home
           screen. You can also reset or delete your advertising ID in your phone&rsquo;s settings.
-          RankReels Pro removes ads completely.
-        </p>
-      </Section>
-
-      <Section title="Purchases (RankReels Pro)">
-        <p>
-          RankReels Pro is sold through Google Play. Google processes the payment, and we never see
-          your card or payment details. The app asks Google Play which purchases you own, so it can
-          unlock Pro, and remembers the result on your device so Pro works offline. Manage or cancel
-          a subscription in the Google Play app. Google&rsquo;s{" "}
-          <a className={link} href="https://policies.google.com/privacy">
-            privacy policy
-          </a>{" "}
-          applies to purchases.
         </p>
       </Section>
 
@@ -130,8 +116,8 @@ export default function RankReelsPrivacy() {
 
       <Section title="Security">
         <p>
-          Your projects are kept in storage that other apps can&rsquo;t read. The Google ads and
-          billing services the app uses encrypt their traffic in transit.
+          Your projects are kept in storage that other apps can&rsquo;t read. The Google ads
+          service the app uses encrypts its traffic in transit.
         </p>
       </Section>
 
